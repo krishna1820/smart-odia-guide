@@ -1,7 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
+import { useServerFn } from "@tanstack/react-start";
 import { PageShell, PageHero } from "@/components/PageShell";
 import schemesImg from "@/assets/schemes.jpg";
 import { ArrowUpRight } from "lucide-react";
+import { listContent } from "@/lib/content.functions";
 
 export const Route = createFileRoute("/schemes")({
   head: () => ({
@@ -13,16 +16,13 @@ export const Route = createFileRoute("/schemes")({
   component: SchemesPage,
 });
 
-const schemes = [
-  { name: "Kalia Yojana", dept: "Agriculture & Farmers", desc: "Financial assistance of ₹10,000/year for small and marginal farmers.", tag: "Farmers" },
-  { name: "Biju Swasthya Kalyan Yojana", dept: "Health", desc: "Cashless treatment up to ₹5 lakh per family per year.", tag: "Health" },
-  { name: "Mukhyamantri Karma Tatpara Abhiyan", dept: "Skill Development", desc: "Skilling youth for industry-ready employment.", tag: "Youth" },
-  { name: "Mission Shakti", dept: "Women & Child", desc: "Empowering 70 lakh women through self-help groups.", tag: "Women" },
-  { name: "Madho Singh Haath Kharcha", dept: "ST & SC Development", desc: "Pocket money for tribal students in residential schools.", tag: "Education" },
-  { name: "Nirman Shramik Pension", dept: "Labour", desc: "Monthly pension for registered construction workers.", tag: "Workers" },
-];
+type Item = { id: string; title: string; subtitle: string | null; description: string | null; tag: string | null };
 
 function SchemesPage() {
+  const fn = useServerFn(listContent);
+  const [items, setItems] = useState<Item[]>([]);
+  useEffect(() => { fn({ data: { category: "scheme" } }).then((d) => setItems(d as Item[])); }, [fn]);
+
   return (
     <PageShell>
       <PageHero
@@ -33,15 +33,15 @@ function SchemesPage() {
       />
       <section className="mx-auto max-w-7xl px-6 py-20">
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {schemes.map((s) => (
-            <article key={s.name} className="group rounded-2xl border border-border bg-card p-7 transition-all hover:-translate-y-1 hover:border-primary/40 hover:shadow-[var(--shadow-elegant)]">
+          {items.map((s) => (
+            <article key={s.id} className="group rounded-2xl border border-border bg-card p-7 transition-all hover:-translate-y-1 hover:border-primary/40 hover:shadow-[var(--shadow-elegant)]">
               <div className="flex items-center justify-between">
-                <span className="rounded-full bg-accent/30 px-3 py-1 text-[10px] font-semibold uppercase tracking-widest text-foreground">{s.tag}</span>
+                {s.tag && <span className="rounded-full bg-accent/30 px-3 py-1 text-[10px] font-semibold uppercase tracking-widest text-foreground">{s.tag}</span>}
                 <ArrowUpRight className="h-4 w-4 text-muted-foreground transition-transform group-hover:rotate-45" />
               </div>
-              <h3 className="mt-5 font-display text-2xl text-foreground">{s.name}</h3>
-              <div className="mt-1 text-xs text-primary">{s.dept}</div>
-              <p className="mt-4 text-sm text-muted-foreground">{s.desc}</p>
+              <h3 className="mt-5 font-display text-2xl text-foreground">{s.title}</h3>
+              {s.subtitle && <div className="mt-1 text-xs text-primary">{s.subtitle}</div>}
+              {s.description && <p className="mt-4 text-sm text-muted-foreground">{s.description}</p>}
             </article>
           ))}
         </div>

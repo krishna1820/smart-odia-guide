@@ -12,8 +12,13 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as TourismRouteImport } from './routes/tourism'
 import { Route as ServicesRouteImport } from './routes/services'
 import { Route as SchemesRouteImport } from './routes/schemes'
+import { Route as LoginRouteImport } from './routes/login'
 import { Route as AgricultureRouteImport } from './routes/agriculture'
+import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
+import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
+import { Route as AuthenticatedAdminCategoryRouteImport } from './routes/_authenticated/admin.$category'
 
 const TourismRoute = TourismRouteImport.update({
   id: '/tourism',
@@ -30,9 +35,18 @@ const SchemesRoute = SchemesRouteImport.update({
   path: '/schemes',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AgricultureRoute = AgricultureRouteImport.update({
   id: '/agriculture',
   path: '/agriculture',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedRoute = AuthenticatedRouteImport.update({
+  id: '/_authenticated',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -40,40 +54,98 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+const AuthenticatedAdminIndexRoute = AuthenticatedAdminIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AuthenticatedAdminRoute,
+} as any)
+const AuthenticatedAdminCategoryRoute =
+  AuthenticatedAdminCategoryRouteImport.update({
+    id: '/$category',
+    path: '/$category',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/agriculture': typeof AgricultureRoute
+  '/login': typeof LoginRoute
   '/schemes': typeof SchemesRoute
   '/services': typeof ServicesRoute
   '/tourism': typeof TourismRoute
+  '/admin': typeof AuthenticatedAdminRouteWithChildren
+  '/admin/$category': typeof AuthenticatedAdminCategoryRoute
+  '/admin/': typeof AuthenticatedAdminIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/agriculture': typeof AgricultureRoute
+  '/login': typeof LoginRoute
   '/schemes': typeof SchemesRoute
   '/services': typeof ServicesRoute
   '/tourism': typeof TourismRoute
+  '/admin/$category': typeof AuthenticatedAdminCategoryRoute
+  '/admin': typeof AuthenticatedAdminIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_authenticated': typeof AuthenticatedRouteWithChildren
   '/agriculture': typeof AgricultureRoute
+  '/login': typeof LoginRoute
   '/schemes': typeof SchemesRoute
   '/services': typeof ServicesRoute
   '/tourism': typeof TourismRoute
+  '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
+  '/_authenticated/admin/$category': typeof AuthenticatedAdminCategoryRoute
+  '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/agriculture' | '/schemes' | '/services' | '/tourism'
+  fullPaths:
+    | '/'
+    | '/agriculture'
+    | '/login'
+    | '/schemes'
+    | '/services'
+    | '/tourism'
+    | '/admin'
+    | '/admin/$category'
+    | '/admin/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/agriculture' | '/schemes' | '/services' | '/tourism'
-  id: '__root__' | '/' | '/agriculture' | '/schemes' | '/services' | '/tourism'
+  to:
+    | '/'
+    | '/agriculture'
+    | '/login'
+    | '/schemes'
+    | '/services'
+    | '/tourism'
+    | '/admin/$category'
+    | '/admin'
+  id:
+    | '__root__'
+    | '/'
+    | '/_authenticated'
+    | '/agriculture'
+    | '/login'
+    | '/schemes'
+    | '/services'
+    | '/tourism'
+    | '/_authenticated/admin'
+    | '/_authenticated/admin/$category'
+    | '/_authenticated/admin/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthenticatedRoute: typeof AuthenticatedRouteWithChildren
   AgricultureRoute: typeof AgricultureRoute
+  LoginRoute: typeof LoginRoute
   SchemesRoute: typeof SchemesRoute
   ServicesRoute: typeof ServicesRoute
   TourismRoute: typeof TourismRoute
@@ -102,11 +174,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SchemesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/agriculture': {
       id: '/agriculture'
       path: '/agriculture'
       fullPath: '/agriculture'
       preLoaderRoute: typeof AgricultureRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -116,12 +202,60 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/admin': {
+      id: '/_authenticated/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AuthenticatedAdminRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/admin/': {
+      id: '/_authenticated/admin/'
+      path: '/'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AuthenticatedAdminIndexRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/$category': {
+      id: '/_authenticated/admin/$category'
+      path: '/$category'
+      fullPath: '/admin/$category'
+      preLoaderRoute: typeof AuthenticatedAdminCategoryRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
   }
 }
 
+interface AuthenticatedAdminRouteChildren {
+  AuthenticatedAdminCategoryRoute: typeof AuthenticatedAdminCategoryRoute
+  AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
+}
+
+const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
+  AuthenticatedAdminCategoryRoute: AuthenticatedAdminCategoryRoute,
+  AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
+}
+
+const AuthenticatedAdminRouteWithChildren =
+  AuthenticatedAdminRoute._addFileChildren(AuthenticatedAdminRouteChildren)
+
+interface AuthenticatedRouteChildren {
+  AuthenticatedAdminRoute: typeof AuthenticatedAdminRouteWithChildren
+}
+
+const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
+  AuthenticatedAdminRoute: AuthenticatedAdminRouteWithChildren,
+}
+
+const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
+  AuthenticatedRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthenticatedRoute: AuthenticatedRouteWithChildren,
   AgricultureRoute: AgricultureRoute,
+  LoginRoute: LoginRoute,
   SchemesRoute: SchemesRoute,
   ServicesRoute: ServicesRoute,
   TourismRoute: TourismRoute,
@@ -129,3 +263,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
