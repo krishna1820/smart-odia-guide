@@ -9,8 +9,32 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as TourismRouteImport } from './routes/tourism'
+import { Route as ServicesRouteImport } from './routes/services'
+import { Route as SchemesRouteImport } from './routes/schemes'
+import { Route as AgricultureRouteImport } from './routes/agriculture'
 import { Route as IndexRouteImport } from './routes/index'
 
+const TourismRoute = TourismRouteImport.update({
+  id: '/tourism',
+  path: '/tourism',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ServicesRoute = ServicesRouteImport.update({
+  id: '/services',
+  path: '/services',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SchemesRoute = SchemesRouteImport.update({
+  id: '/schemes',
+  path: '/schemes',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AgricultureRoute = AgricultureRouteImport.update({
+  id: '/agriculture',
+  path: '/agriculture',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -19,28 +43,72 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/agriculture': typeof AgricultureRoute
+  '/schemes': typeof SchemesRoute
+  '/services': typeof ServicesRoute
+  '/tourism': typeof TourismRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/agriculture': typeof AgricultureRoute
+  '/schemes': typeof SchemesRoute
+  '/services': typeof ServicesRoute
+  '/tourism': typeof TourismRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/agriculture': typeof AgricultureRoute
+  '/schemes': typeof SchemesRoute
+  '/services': typeof ServicesRoute
+  '/tourism': typeof TourismRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths: '/' | '/agriculture' | '/schemes' | '/services' | '/tourism'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/agriculture' | '/schemes' | '/services' | '/tourism'
+  id: '__root__' | '/' | '/agriculture' | '/schemes' | '/services' | '/tourism'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AgricultureRoute: typeof AgricultureRoute
+  SchemesRoute: typeof SchemesRoute
+  ServicesRoute: typeof ServicesRoute
+  TourismRoute: typeof TourismRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/tourism': {
+      id: '/tourism'
+      path: '/tourism'
+      fullPath: '/tourism'
+      preLoaderRoute: typeof TourismRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/services': {
+      id: '/services'
+      path: '/services'
+      fullPath: '/services'
+      preLoaderRoute: typeof ServicesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/schemes': {
+      id: '/schemes'
+      path: '/schemes'
+      fullPath: '/schemes'
+      preLoaderRoute: typeof SchemesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/agriculture': {
+      id: '/agriculture'
+      path: '/agriculture'
+      fullPath: '/agriculture'
+      preLoaderRoute: typeof AgricultureRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -53,6 +121,10 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AgricultureRoute: AgricultureRoute,
+  SchemesRoute: SchemesRoute,
+  ServicesRoute: ServicesRoute,
+  TourismRoute: TourismRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
