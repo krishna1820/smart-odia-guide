@@ -38,7 +38,7 @@ type Row = {
 };
 
 function AdminCategoryPage() {
-  const { category } = Route.useParams();
+  const { category } = Route.useParams() as { category: Category };
   const fetchAll = useServerFn(listAllContent);
   const create = useServerFn(createContent);
   const update = useServerFn(updateContent);
