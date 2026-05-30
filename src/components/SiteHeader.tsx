@@ -39,10 +39,10 @@ export function SiteHeader() {
           ))}
         </nav>
         <Link
-          to="/services"
+          to="/admin"
           className="hidden rounded-full bg-foreground px-5 py-2.5 text-sm font-medium text-background transition-all hover:bg-foreground/90 md:inline-flex"
         >
-          Citizen Login
+          Admin
         </Link>
         <button className="md:hidden" onClick={() => setOpen(!open)} aria-label="Menu">
           {open ? <X /> : <Menu />}

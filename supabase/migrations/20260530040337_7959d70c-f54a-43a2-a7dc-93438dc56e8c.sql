@@ -1,0 +1,16 @@
+
+-- Fix search_path and lock down execute on helpers
+create or replace function public.tg_set_updated_at()
+returns trigger
+language plpgsql
+security definer
+set search_path = public
+as $$
+begin
+  new.updated_at = now();
+  return new;
+end;
+$$;
+
+revoke execute on function public.has_role(uuid, public.app_role) from public, anon, authenticated;
+revoke execute on function public.tg_set_updated_at() from public, anon, authenticated;

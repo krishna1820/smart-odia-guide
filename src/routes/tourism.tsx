@@ -1,6 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
+import { useServerFn } from "@tanstack/react-start";
 import { PageShell, PageHero } from "@/components/PageShell";
 import tourismImg from "@/assets/tourism.jpg";
+import { listContent } from "@/lib/content.functions";
 
 export const Route = createFileRoute("/tourism")({
   head: () => ({
@@ -12,16 +15,13 @@ export const Route = createFileRoute("/tourism")({
   component: TourismPage,
 });
 
-const places = [
-  { name: "Konark Sun Temple", region: "Puri District", note: "13th century UNESCO World Heritage site shaped as a colossal chariot." },
-  { name: "Puri Jagannath Temple", region: "Puri", note: "One of the Char Dham pilgrimages and the seat of the Rath Yatra." },
-  { name: "Chilika Lake", region: "Khordha", note: "Asia's largest brackish water lagoon — home to dolphins and migratory birds." },
-  { name: "Bhitarkanika National Park", region: "Kendrapara", note: "Mangrove forests and saltwater crocodiles in their natural habitat." },
-  { name: "Udayagiri & Khandagiri", region: "Bhubaneswar", note: "Ancient rock-cut Jain caves carved over 2,000 years ago." },
-  { name: "Daringbadi", region: "Kandhamal", note: "The 'Kashmir of Odisha' — pine forests, valleys and coffee plantations." },
-];
+type Item = { id: string; title: string; subtitle: string | null; description: string | null };
 
 function TourismPage() {
+  const fn = useServerFn(listContent);
+  const [items, setItems] = useState<Item[]>([]);
+  useEffect(() => { fn({ data: { category: "tourism" } }).then((d) => setItems(d as Item[])); }, [fn]);
+
   return (
     <PageShell>
       <PageHero
@@ -32,11 +32,13 @@ function TourismPage() {
       />
       <section className="mx-auto max-w-7xl px-6 py-20">
         <div className="grid gap-px bg-border md:grid-cols-2 lg:grid-cols-3">
-          {places.map((p, i) => (
-            <div key={p.name} className="group relative overflow-hidden bg-card p-8 transition-colors hover:bg-foreground hover:text-background">
-              <div className="text-xs uppercase tracking-widest text-primary group-hover:text-accent">{String(i + 1).padStart(2, "0")} · {p.region}</div>
-              <h3 className="mt-4 font-display text-3xl">{p.name}</h3>
-              <p className="mt-4 text-sm opacity-70">{p.note}</p>
+          {items.map((p, i) => (
+            <div key={p.id} className="group relative overflow-hidden bg-card p-8 transition-colors hover:bg-foreground hover:text-background">
+              <div className="text-xs uppercase tracking-widest text-primary group-hover:text-accent">
+                {String(i + 1).padStart(2, "0")}{p.subtitle ? ` · ${p.subtitle}` : ""}
+              </div>
+              <h3 className="mt-4 font-display text-3xl">{p.title}</h3>
+              {p.description && <p className="mt-4 text-sm opacity-70">{p.description}</p>}
             </div>
           ))}
         </div>
