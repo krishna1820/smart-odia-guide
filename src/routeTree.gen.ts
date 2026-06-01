@@ -13,11 +13,14 @@ import { Route as TourismRouteImport } from './routes/tourism'
 import { Route as ServicesRouteImport } from './routes/services'
 import { Route as SchemesRouteImport } from './routes/schemes'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as ContactRouteImport } from './routes/contact'
 import { Route as AgricultureRouteImport } from './routes/agriculture'
 import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticated/profile'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
+import { Route as AuthenticatedAdminFeedbackRouteImport } from './routes/_authenticated/admin.feedback'
 import { Route as AuthenticatedAdminCategoryRouteImport } from './routes/_authenticated/admin.$category'
 
 const TourismRoute = TourismRouteImport.update({
@@ -40,6 +43,11 @@ const LoginRoute = LoginRouteImport.update({
   path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ContactRoute = ContactRouteImport.update({
+  id: '/contact',
+  path: '/contact',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AgricultureRoute = AgricultureRouteImport.update({
   id: '/agriculture',
   path: '/agriculture',
@@ -54,6 +62,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedProfileRoute = AuthenticatedProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
 const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
   id: '/admin',
   path: '/admin',
@@ -64,6 +77,12 @@ const AuthenticatedAdminIndexRoute = AuthenticatedAdminIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AuthenticatedAdminRoute,
 } as any)
+const AuthenticatedAdminFeedbackRoute =
+  AuthenticatedAdminFeedbackRouteImport.update({
+    id: '/feedback',
+    path: '/feedback',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 const AuthenticatedAdminCategoryRoute =
   AuthenticatedAdminCategoryRouteImport.update({
     id: '/$category',
@@ -74,22 +93,28 @@ const AuthenticatedAdminCategoryRoute =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/agriculture': typeof AgricultureRoute
+  '/contact': typeof ContactRoute
   '/login': typeof LoginRoute
   '/schemes': typeof SchemesRoute
   '/services': typeof ServicesRoute
   '/tourism': typeof TourismRoute
   '/admin': typeof AuthenticatedAdminRouteWithChildren
+  '/profile': typeof AuthenticatedProfileRoute
   '/admin/$category': typeof AuthenticatedAdminCategoryRoute
+  '/admin/feedback': typeof AuthenticatedAdminFeedbackRoute
   '/admin/': typeof AuthenticatedAdminIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/agriculture': typeof AgricultureRoute
+  '/contact': typeof ContactRoute
   '/login': typeof LoginRoute
   '/schemes': typeof SchemesRoute
   '/services': typeof ServicesRoute
   '/tourism': typeof TourismRoute
+  '/profile': typeof AuthenticatedProfileRoute
   '/admin/$category': typeof AuthenticatedAdminCategoryRoute
+  '/admin/feedback': typeof AuthenticatedAdminFeedbackRoute
   '/admin': typeof AuthenticatedAdminIndexRoute
 }
 export interface FileRoutesById {
@@ -97,12 +122,15 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteWithChildren
   '/agriculture': typeof AgricultureRoute
+  '/contact': typeof ContactRoute
   '/login': typeof LoginRoute
   '/schemes': typeof SchemesRoute
   '/services': typeof ServicesRoute
   '/tourism': typeof TourismRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
+  '/_authenticated/profile': typeof AuthenticatedProfileRoute
   '/_authenticated/admin/$category': typeof AuthenticatedAdminCategoryRoute
+  '/_authenticated/admin/feedback': typeof AuthenticatedAdminFeedbackRoute
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
 }
 export interface FileRouteTypes {
@@ -110,34 +138,43 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/agriculture'
+    | '/contact'
     | '/login'
     | '/schemes'
     | '/services'
     | '/tourism'
     | '/admin'
+    | '/profile'
     | '/admin/$category'
+    | '/admin/feedback'
     | '/admin/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/agriculture'
+    | '/contact'
     | '/login'
     | '/schemes'
     | '/services'
     | '/tourism'
+    | '/profile'
     | '/admin/$category'
+    | '/admin/feedback'
     | '/admin'
   id:
     | '__root__'
     | '/'
     | '/_authenticated'
     | '/agriculture'
+    | '/contact'
     | '/login'
     | '/schemes'
     | '/services'
     | '/tourism'
     | '/_authenticated/admin'
+    | '/_authenticated/profile'
     | '/_authenticated/admin/$category'
+    | '/_authenticated/admin/feedback'
     | '/_authenticated/admin/'
   fileRoutesById: FileRoutesById
 }
@@ -145,6 +182,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRoute: typeof AuthenticatedRouteWithChildren
   AgricultureRoute: typeof AgricultureRoute
+  ContactRoute: typeof ContactRoute
   LoginRoute: typeof LoginRoute
   SchemesRoute: typeof SchemesRoute
   ServicesRoute: typeof ServicesRoute
@@ -181,6 +219,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/contact': {
+      id: '/contact'
+      path: '/contact'
+      fullPath: '/contact'
+      preLoaderRoute: typeof ContactRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/agriculture': {
       id: '/agriculture'
       path: '/agriculture'
@@ -202,6 +247,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/profile': {
+      id: '/_authenticated/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof AuthenticatedProfileRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
     '/_authenticated/admin': {
       id: '/_authenticated/admin'
       path: '/admin'
@@ -216,6 +268,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminIndexRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/feedback': {
+      id: '/_authenticated/admin/feedback'
+      path: '/feedback'
+      fullPath: '/admin/feedback'
+      preLoaderRoute: typeof AuthenticatedAdminFeedbackRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/admin/$category': {
       id: '/_authenticated/admin/$category'
       path: '/$category'
@@ -228,11 +287,13 @@ declare module '@tanstack/react-router' {
 
 interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminCategoryRoute: typeof AuthenticatedAdminCategoryRoute
+  AuthenticatedAdminFeedbackRoute: typeof AuthenticatedAdminFeedbackRoute
   AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
 }
 
 const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminCategoryRoute: AuthenticatedAdminCategoryRoute,
+  AuthenticatedAdminFeedbackRoute: AuthenticatedAdminFeedbackRoute,
   AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
 }
 
@@ -241,10 +302,12 @@ const AuthenticatedAdminRouteWithChildren =
 
 interface AuthenticatedRouteChildren {
   AuthenticatedAdminRoute: typeof AuthenticatedAdminRouteWithChildren
+  AuthenticatedProfileRoute: typeof AuthenticatedProfileRoute
 }
 
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedAdminRoute: AuthenticatedAdminRouteWithChildren,
+  AuthenticatedProfileRoute: AuthenticatedProfileRoute,
 }
 
 const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
@@ -255,6 +318,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRoute: AuthenticatedRouteWithChildren,
   AgricultureRoute: AgricultureRoute,
+  ContactRoute: ContactRoute,
   LoginRoute: LoginRoute,
   SchemesRoute: SchemesRoute,
   ServicesRoute: ServicesRoute,
@@ -263,3 +327,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
