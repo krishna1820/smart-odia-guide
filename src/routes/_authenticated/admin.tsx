@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { supabase } from "@/integrations/supabase/client";
 import { getMyRole, claimFirstAdmin } from "@/lib/content.functions";
-import { LogOut, Shield, FileText, MapPin, Sprout, Building2, Home } from "lucide-react";
+import { LogOut, Shield, FileText, MapPin, Sprout, Building2, Home, MessageSquare } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/admin")({
   head: () => ({ meta: [{ title: "Admin · Smart Odisha" }] }),
@@ -11,11 +11,12 @@ export const Route = createFileRoute("/_authenticated/admin")({
 });
 
 const tabs = [
-  { to: "/admin", label: "Overview", icon: Home, exact: true },
+  { to: "/admin", label: "Dashboard", icon: Home, exact: true },
   { to: "/admin/scheme", label: "Schemes", icon: FileText },
   { to: "/admin/tourism", label: "Tourism", icon: MapPin },
   { to: "/admin/agriculture", label: "Agriculture", icon: Sprout },
   { to: "/admin/service", label: "Services", icon: Building2 },
+  { to: "/admin/feedback", label: "Feedback", icon: MessageSquare },
 ];
 
 function AdminLayout() {

@@ -19,10 +19,10 @@ function LoginPage() {
 
   useEffect(() => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_e, session) => {
-      if (session) navigate({ to: "/admin", replace: true });
+      if (session) navigate({ to: "/profile", replace: true });
     });
     supabase.auth.getUser().then(({ data }) => {
-      if (data.user) navigate({ to: "/admin", replace: true });
+      if (data.user) navigate({ to: "/profile", replace: true });
     });
     return () => subscription.unsubscribe();
   }, [navigate]);
@@ -36,7 +36,7 @@ function LoginPage() {
         const { error } = await supabase.auth.signUp({
           email,
           password,
-          options: { emailRedirectTo: window.location.origin + "/admin" },
+          options: { emailRedirectTo: window.location.origin + "/profile" },
         });
         if (error) throw error;
       } else {
@@ -53,7 +53,7 @@ function LoginPage() {
   const google = async () => {
     setError(null);
     const result = await lovable.auth.signInWithOAuth("google", {
-      redirect_uri: window.location.origin + "/admin",
+      redirect_uri: window.location.origin + "/profile",
     });
     if (result.error) setError(result.error.message);
   };
