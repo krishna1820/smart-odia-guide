@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as TourismRouteImport } from './routes/tourism'
 import { Route as ServicesRouteImport } from './routes/services'
 import { Route as SchemesRouteImport } from './routes/schemes'
+import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as AgricultureRouteImport } from './routes/agriculture'
@@ -36,6 +37,11 @@ const ServicesRoute = ServicesRouteImport.update({
 const SchemesRoute = SchemesRouteImport.update({
   id: '/schemes',
   path: '/schemes',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ResetPasswordRoute = ResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LoginRoute = LoginRouteImport.update({
@@ -95,6 +101,7 @@ export interface FileRoutesByFullPath {
   '/agriculture': typeof AgricultureRoute
   '/contact': typeof ContactRoute
   '/login': typeof LoginRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/schemes': typeof SchemesRoute
   '/services': typeof ServicesRoute
   '/tourism': typeof TourismRoute
@@ -109,6 +116,7 @@ export interface FileRoutesByTo {
   '/agriculture': typeof AgricultureRoute
   '/contact': typeof ContactRoute
   '/login': typeof LoginRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/schemes': typeof SchemesRoute
   '/services': typeof ServicesRoute
   '/tourism': typeof TourismRoute
@@ -124,6 +132,7 @@ export interface FileRoutesById {
   '/agriculture': typeof AgricultureRoute
   '/contact': typeof ContactRoute
   '/login': typeof LoginRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/schemes': typeof SchemesRoute
   '/services': typeof ServicesRoute
   '/tourism': typeof TourismRoute
@@ -140,6 +149,7 @@ export interface FileRouteTypes {
     | '/agriculture'
     | '/contact'
     | '/login'
+    | '/reset-password'
     | '/schemes'
     | '/services'
     | '/tourism'
@@ -154,6 +164,7 @@ export interface FileRouteTypes {
     | '/agriculture'
     | '/contact'
     | '/login'
+    | '/reset-password'
     | '/schemes'
     | '/services'
     | '/tourism'
@@ -168,6 +179,7 @@ export interface FileRouteTypes {
     | '/agriculture'
     | '/contact'
     | '/login'
+    | '/reset-password'
     | '/schemes'
     | '/services'
     | '/tourism'
@@ -184,6 +196,7 @@ export interface RootRouteChildren {
   AgricultureRoute: typeof AgricultureRoute
   ContactRoute: typeof ContactRoute
   LoginRoute: typeof LoginRoute
+  ResetPasswordRoute: typeof ResetPasswordRoute
   SchemesRoute: typeof SchemesRoute
   ServicesRoute: typeof ServicesRoute
   TourismRoute: typeof TourismRoute
@@ -210,6 +223,13 @@ declare module '@tanstack/react-router' {
       path: '/schemes'
       fullPath: '/schemes'
       preLoaderRoute: typeof SchemesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reset-password': {
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/login': {
@@ -320,6 +340,7 @@ const rootRouteChildren: RootRouteChildren = {
   AgricultureRoute: AgricultureRoute,
   ContactRoute: ContactRoute,
   LoginRoute: LoginRoute,
+  ResetPasswordRoute: ResetPasswordRoute,
   SchemesRoute: SchemesRoute,
   ServicesRoute: ServicesRoute,
   TourismRoute: TourismRoute,
